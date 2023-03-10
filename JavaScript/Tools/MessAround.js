@@ -19,21 +19,22 @@ let festival_list = [
 const fishMan = new Date(),
   year = fishMan.getFullYear(),
   month = fishMan.getMonth() + 1,
-  day = fishMan.getDate();
+  day = fishMan.getDate(),
+  hour = fishMan.getHours();
+
 let message = "";
 
-function headInfo() {
-  const hour = fishMan.getHours();
-  let mae;
+function headInfo(hour) {
+  let moment;
   if (hour >= 6 && hour < 12) {
-    mae = "上午";
+    moment = "上午";
   } else if (hour >= 12 && hour < 18) {
-    mae = "下午";
+    moment = "下午";
   } else if ((hour >= 18 && hour < 24) || hour < 6) {
-    mae = "晚上";
+    moment = "晚上";
   }
 
-  message += `【摸鱼办】提醒您：${month}月${day}日${mae}好,摸鱼人！\n工作再累,一定不要忘记摸鱼哦！\n有事没事起身去茶水间,去厕所,去廊道走走别老在工位上坐着, 钱是老板的, 但命是自己的!`;
+  message += `【摸鱼办】提醒您：${month}月${day}日${moment}好,摸鱼人！\n工作再累,一定不要忘记摸鱼哦！\n有事没事起身去茶水间,去厕所,去廊道走走别老在工位上坐着, 钱是老板的, 但命是自己的!`;
 }
 /**
  * @Created by Mol on 2023/02/12
@@ -49,16 +50,17 @@ function weekend() {
   message += info;
 }
 
-var startDate = Date.parse(fishMan);
-
 /**
  * @Created by Mol on 2022/01/23
  * @description 判断是否过节
  */
 
-function festival([chinese, fmonth, fday]) {
-  const newFestivalData = new Date(`${year},${fmonth},${fday}`);
-  const newFestivalDataNext = new Date(`${year + 1},${fmonth},${fday}`);
+function festival([chinese, festivalMonth, festivalDay]) {
+  const startDate = Date.parse(fishMan);
+  const newFestivalData = new Date(`${year},${festivalMonth},${festivalDay}`);
+  const newFestivalDataNext = new Date(
+    `${year + 1},${festivalMonth},${festivalDay}`
+  );
   const endDate = Date.parse(newFestivalData);
   const endDateNext = Date.parse(newFestivalDataNext);
   const days = calculate(endDate) + 1;
@@ -67,16 +69,15 @@ function festival([chinese, fmonth, fday]) {
   function calculate(endDate) {
     return Math.round((endDate - startDate) / (1 * 24 * 60 * 60 * 1000));
   }
-
-  if (month == fmonth) {
-    if (day == fday) {
+  if (month == festivalMonth) {
+    if (day == festivalDay) {
       info = `今天就是${chinese}节,好好享受！\n`;
-    } else if (day < fday) {
+    } else if (day < festivalDay) {
       info = `距离${chinese}节还有${days}天\n`;
     } else {
       info = `距离${chinese}节还有${daysNext}天\n`;
     }
-  } else if (month > fmonth) {
+  } else if (month > festivalMonth) {
     info = `距离${chinese}节还有${daysNext}天\n`;
   } else {
     info = `距离${chinese}节还有${days}天\n`;
@@ -84,12 +85,12 @@ function festival([chinese, fmonth, fday]) {
   message += info;
 }
 
-function last_info() {
+function last_message() {
   message += `上班是帮老板赚钱,摸鱼是赚老板的钱！最后,祝愿天下所有摸鱼人,都能愉快的渡过每一天…\n​`;
 }
 /**
  * @Created by Mol on 2022/01/23
- * @description 节日列表整理
+ * @description 节日列表排序-冒泡排序
  */
 
 function sort(arr) {
@@ -105,6 +106,7 @@ function sort(arr) {
   const now = new Date();
   const nowMonth = now.getMonth() + 1;
   const nowDay = now.getDate();
+
   const len = arr.length;
   for (let i = 0; i < len; i++) {
     const [_, month, day] = arr[i];
@@ -117,16 +119,14 @@ function sort(arr) {
 }
 
 function festivalAll() {
-  for (let i = 0; i < festival_list.length; i++) {
-    festival(festival_list[i]);
-  }
+  festival_list.forEach((item) => festival(item));
 }
 
 (function () {
-  headInfo();
+  headInfo(hour);
   weekend();
   sort(festival_list);
   festivalAll();
-  last_info();
+  last_message();
   console.log(message);
 })();
