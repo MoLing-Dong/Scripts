@@ -3,8 +3,8 @@ import os
 import sys
 
 
-# 检查MongoDB服务是否存在,存在返回True,不存在返回False
-def check_mongo_service(service_name: str = 'MongoDB') -> bool:
+# 检查服务是否存活,并返回状态
+def check_plan_service_live(service_name: str = 'MongoDB') -> bool:
     # 获取服务列表
     service_list = os.popen('net start').read()
     # 判断服务是否存在
@@ -43,6 +43,8 @@ def check_admin():
 
 # 判断检查的服务是什么,并返回服务名称
 # MySQL最新版本为8.0,默认为5.7
+# return: service_name
+# description: 用来检查的服务名称,将会被赋值给全局变量service_name
 def check_service():
     switch = {
         1: 'MongoDB',
@@ -52,7 +54,7 @@ def check_service():
     }
     for i in switch:
         print(i, switch[i])
-    user_input = input("输入需要检查的服务名称(默认为MongoDB)：") or 1
+    user_input = input("输入需要检查的服务序号(默认为MongoDB)：") or 1
     # 判断用户输入是否为数字,并且在switch字典的键值范围内
     if user_input.isdigit() and int(user_input) in switch:
         global service_name
@@ -65,5 +67,5 @@ def check_service():
 if __name__ == "__main__":
     # check_admin()
     check_service()
-    alive = check_mongo_service()
-    check_service_state(alive)
+    alive_service = check_plan_service_live()
+    check_service_state(alive_service)
