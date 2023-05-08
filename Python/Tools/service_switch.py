@@ -8,7 +8,7 @@ def check_plan_service_live(service_name:str) -> bool:
     # 获取服务列表
     service_list = os.popen('net start').read()
     # 判断服务是否存在
-    if service_name == "MySQL":
+    if service_name == f"MySQL":
         service_name = os.popen('sc queryex type= service state= all | findstr "SERVICE_NAME:" | findstr "MySQL"').read().split()[1]
         
     if service_name in service_list:
@@ -18,7 +18,7 @@ def check_plan_service_live(service_name:str) -> bool:
 
 
 #  检测服务status,并提示用户是否启动或关闭服务
-def check_service_state(status: bool,service_name:str):
+def check_service_state(status: bool,service_name:str) -> None:
     if status:
         print(f'{service_name}服务已启动')
         if input(f'是否关闭{service_name}服务？(y/n)') == 'y':
@@ -68,5 +68,5 @@ if __name__ == "__main__":
     # check_admin()
     switch_item=check_service()
     alive_service,service_name= check_plan_service_live(switch_item)
-    print('当前为',service_name)
+    print('当前检测服务为',service_name)
     check_service_state(alive_service,service_name)
