@@ -1,9 +1,16 @@
 /**
+* @Created by Mol on 2024/01/06
+* @description 此脚本用于生成摸鱼办的消息。
+* @explain 完成对农历节日的计算。
+*/
+
+
+/**
  * @Created by Mol on 2022/01/03
  * @description 节假日列表
  */
 
-let festival_list = [
+const festival_list = [
   ["春节", 2, 22],
   ["元旦", 1, 1],
   //   ["清明", 4, 5],
@@ -16,11 +23,11 @@ let festival_list = [
   ["愚人", 4, 1],
 ];
 
-const fishMan = new Date(),
-  year = fishMan.getFullYear(),
-  month = fishMan.getMonth() + 1,
-  day = fishMan.getDate(),
-  hour = fishMan.getHours();
+const fishMan = new Date();
+const year = fishMan.getFullYear();
+const month = fishMan.getMonth() + 1;
+const day = fishMan.getDate();
+const hour = fishMan.getHours();
 
 let message = "";
 
@@ -34,26 +41,17 @@ function headInfo(hour) {
     moment = "晚上";
   }
 
-  message += `【摸鱼办】提醒您：${month}月${day}日${moment}好,摸鱼人！\n工作再累,一定不要忘记摸鱼哦！\n有事没事起身去茶水间,去厕所,去廊道走走别老在工位上坐着, 钱是老板的, 但命是自己的!`;
+  message += `【摸鱼办】提醒您：${month}月${day}日${moment}好，摸鱼人！\n工作再累，一定不要忘记摸鱼哦！\n有事没事起身去茶水间，去厕所，去廊道走走别老在工位上坐着，钱是老板的，但命是自己的！`;
 }
-/**
- * @Created by Mol on 2023/02/12
- * @description 判断是否周末
- */
 
 function weekend() {
-  //获取今日星期
-  let today = fishMan.getDay();
-  today > 0 && today <= 5
-    ? (info = `\n距离周末还有${6 - today}天\n`)
-    : (info = `\n好好享受周末吧\n`);
+  const today = fishMan.getDay();
+  const info =
+    today > 0 && today <= 5
+      ? `\n距离周末还有${6 - today}天\n`
+      : `\n好好享受周末吧\n`;
   message += info;
 }
-
-/**
- * @Created by Mol on 2022/01/23
- * @description 判断是否过节
- */
 
 function festival([chinese, festivalMonth, festivalDay]) {
   const startDate = Date.parse(fishMan);
@@ -69,9 +67,11 @@ function festival([chinese, festivalMonth, festivalDay]) {
   function calculate(endDate) {
     return Math.round((endDate - startDate) / (1 * 24 * 60 * 60 * 1000));
   }
+
+  let info = "";
   if (month == festivalMonth) {
     if (day == festivalDay) {
-      info = `今天就是${chinese}节,好好享受！\n`;
+      info = `今天就是${chinese}节，好好享受！\n`;
     } else if (day < festivalDay) {
       info = `距离${chinese}节还有${days}天\n`;
     } else {
@@ -86,12 +86,8 @@ function festival([chinese, festivalMonth, festivalDay]) {
 }
 
 function last_message() {
-  message += `上班是帮老板赚钱,摸鱼是赚老板的钱！最后,祝愿天下所有摸鱼人,都能愉快的渡过每一天…\n​`;
+  message += `上班是帮老板赚钱，摸鱼是赚老板的钱！最后，祝愿天下所有摸鱼人，都能愉快的渡过每一天…\n​`;
 }
-/**
- * @Created by Mol on 2022/01/23
- * @description 节日列表排序-冒泡排序
- */
 
 function sort(arr) {
   arr.sort(([_, afterMonth, afterDay], [_1, beforeMonth, beforeDay]) => {
@@ -102,7 +98,7 @@ function sort(arr) {
       return -1;
     }
   });
-  //   console.log(arr);
+
   const now = new Date();
   const nowMonth = now.getMonth() + 1;
   const nowDay = now.getDate();
