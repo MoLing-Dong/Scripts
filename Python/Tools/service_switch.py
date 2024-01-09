@@ -3,7 +3,6 @@ import os
 import sys
 
 
-
 # 判断检查的服务是什么,并返回服务名称
 # return: service_name
 # description: 用来检查的服务名称,将会被赋值给全局变量service_name
@@ -24,25 +23,27 @@ def check_service():
         print('输入错误')
         sys.exit()
 
+
 # 检查服务是否存活,并返回状态
-def check_plan_service_live(service_name:str) -> bool:
-    
+def check_plan_service_live(service_name: str) -> bool:
     # 检查服务是否存在，是否安装当前服务
     try:
-        service_name = os.popen(f'sc queryex type= service state= all | findstr "SERVICE_NAME:" | findstr "{service_name}"').read().split()[1]
+        service_name = os.popen(
+            f'sc queryex type= service state= all | findstr "SERVICE_NAME:" | findstr "{service_name}"').read().split()[
+            1]
     except IndexError:
         print(f'{service_name}服务不存在或未安装')
         sys.exit()
 
     # 检查当前是否正在运行
     if service_name in os.popen('net start').read():
-        return True,service_name
+        return True, service_name
     else:
-        return False,service_name
+        return False, service_name
 
 
 #  检测服务status,并提示用户是否启动或关闭服务
-def check_service_state(status: bool,service_name:str) -> None:
+def check_service_state(status: bool, service_name: str) -> None:
     if status:
         print(f'{service_name}服务已启动')
         if input(f'是否关闭{service_name}服务？(y/n)') == 'y':
@@ -65,6 +66,7 @@ def check_admin():
         print('请以管理员身份运行')
         sys.exit()
 
+
 # 设置窗口标题，大小，输出显示位置居中
 def set_window():
     os.system('mode con cols=80 lines=20')
@@ -73,10 +75,11 @@ def set_window():
     os.system('cls')
     os.system('mode con')
 
+
 if __name__ == "__main__":
     # check_admin()
     # set_window()
-    switch_item=check_service()
-    alive_service,service_name= check_plan_service_live(switch_item)
-    print('当前检测服务为',service_name)
-    check_service_state(alive_service,service_name)
+    switch_item = check_service()
+    alive_service, service_name = check_plan_service_live(switch_item)
+    print('当前检测服务为', service_name)
+    check_service_state(alive_service, service_name)
